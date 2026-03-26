@@ -1,0 +1,31 @@
+{{- if not (.Page.Scratch.Get "hugoModKatexLoaded") -}}
+  <link rel="stylesheet" href="{{ "vendor/hugo-mod-katex/katex.min.css" | relURL }}">
+  <script src="{{ "vendor/hugo-mod-katex/katex.min.js" | relURL }}"></script>
+  <script src="{{ "vendor/hugo-mod-katex/mhchem.min.js" | relURL }}"></script>
+  <link rel="stylesheet" href="{{ "vendor/hugo-mod-katex/hugo-mod-katex.css" | relURL }}">
+  <script src="{{ "vendor/hugo-mod-katex/hugo-mod-katex.js" | relURL }}"></script>
+  {{- .Page.Scratch.Set "hugoModKatexLoaded" true -}}
+{{- end -}}
+{{- $source := .Inner -}}
+{{- $src := .Get "src" -}}
+{{- $expr := .Get "expr" -}}
+{{- $encodedSource := "" -}}
+{{- with .Get "b64" -}}
+  {{- $encodedSource = . -}}
+{{- end -}}
+{{- if ne $src "" -}}
+  {{- $source = readFile (printf "assets/%s" $src) -}}
+{{- end -}}
+{{- if ne $expr "" -}}
+  {{- $source = $expr -}}
+{{- end -}}
+{{- if eq $encodedSource "" -}}
+  {{- $source = trim $source " \n\r\t" -}}
+  {{- if eq $source "" -}}
+    {{- errorf "The %q shortcode requires one of: inner content, expr, b64, or src. File: %s" .Name .Page.File.Path -}}
+  {{- end -}}
+  {{- $encodedSource = $source | base64Encode -}}
+{{- end -}}
+<div class="hugo-mod-katex" data-hugo-mod-katex data-display="true" data-source="{{ $encodedSource }}">
+  <div class="hugo-mod-katex__output" data-katex-output></div>
+</div>

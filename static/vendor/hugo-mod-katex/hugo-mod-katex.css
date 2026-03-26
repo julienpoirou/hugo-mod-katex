@@ -1,0 +1,10 @@
+.hugo-mod-katex-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.hugo-mod-katex__output.is-error {
+  color: #b42318;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
