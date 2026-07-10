@@ -29,7 +29,7 @@ jobs:
           set -euo pipefail
           SITE_DIR="${RUNNER_TEMP}/site"
           OUT_DIR="${RUNNER_TEMP}/public"
-          mkdir -p "${SITE_DIR}/content" "${SITE_DIR}/assets" "${SITE_DIR}/layouts/_default" "${SITE_DIR}/_modules"
+          mkdir -p "${SITE_DIR}/content" "${SITE_DIR}/assets/renderers" "${SITE_DIR}/layouts/_default" "${SITE_DIR}/_modules"
           ln -s "${GITHUB_WORKSPACE}" "${SITE_DIR}/_modules/hugo-mod-katex"
 
           cat > "${SITE_DIR}/layouts/_default/single.html" <<'EOF'
@@ -49,6 +49,9 @@ jobs:
               source = "content"
               target = "content"
             [[module.mounts]]
+              source = "assets"
+              target = "assets"
+            [[module.mounts]]
               source = "layouts"
               target = "layouts"
             [[module.mounts]]
@@ -59,16 +62,60 @@ jobs:
               target = "static"
           EOF
 
-          cat > "${SITE_DIR}/content/test.md" <<'EOF'
+          cat > "${SITE_DIR}/assets/renderers/formula.txt" <<'EOF'
+          \int_0^1 x^2\,dx
+          EOF
+
+          B64_SOURCE=$(printf 'a^2 + b^2 = c^2' | base64 -w0)
+
+          cat > "${SITE_DIR}/content/test.md" <<EOF
           ---
           title: "KaTeX test"
           ---
 
-          Inline: {{< katex-inline expr="e^{i\pi} + 1 = 0" />}}
+          Inline: {{< katex-inline expr="e^{i\pi} + 1 = 0" />}} in a sentence.
 
-          {{< katex expr="\sum_{i=1}^{n} \frac{1}{i^2}" />}}
+          Block expr: {{< katex expr="\sum_{i=1}^{n} \frac{1}{i^2}" />}}
+
+          Block src: {{< katex src="renderers/formula.txt" />}}
+
+          Block b64: {{< katex b64="\${B64_SOURCE}" />}}
+
+          Block inline-body:
+          {{< katex >}}
+          x = y
+          {{< /katex >}}
+
+          Trusted opt-in: {{< katex expr="a" trust="true" />}}
           EOF
 
           hugo --source "${SITE_DIR}" --destination "${OUT_DIR}"
-          grep -q 'vendor/hugo-mod-katex/hugo-mod-katex.js' "${OUT_DIR}/test/index.html"
-          grep -q 'data-hugo-mod-katex' "${OUT_DIR}/test/index.html"
+          PAGE="${OUT_DIR}/test/index.html"
+
+          # Assets injected, and only once for the whole page.
+          grep -q 'vendor/hugo-mod-katex/hugo-mod-katex.js' "${PAGE}"
+          test "$(grep -c 'hugo-mod-katex.js' "${PAGE}")" -eq 1
+
+          # Six shortcodes (5 block + 1 inline) each produce a wrapper.
+          test "$(grep -c 'data-hugo-mod-katex' "${PAGE}")" -eq 6
+
+          # The inline shortcode uses a span so it stays valid inside a <p>.
+          grep -q '<span class="hugo-mod-katex hugo-mod-katex-inline"' "${PAGE}"
+
+          # trust is off by default and only true where explicitly opted in.
+          test "$(grep -c 'data-trust="false"' "${PAGE}")" -eq 5
+          test "$(grep -c 'data-trust="true"' "${PAGE}")" -eq 1
+
+          # An empty source must fail the build explicitly.
+          cat > "${SITE_DIR}/content/invalid.md" <<'EOF'
+          ---
+          title: "invalid"
+          ---
+
+          {{< katex >}}
+          {{< /katex >}}
+          EOF
+          if hugo --source "${SITE_DIR}" --destination "${RUNNER_TEMP}/public-invalid"; then
+            echo "expected the build to fail on an empty shortcode source" >&2
+            exit 1
+          fi
