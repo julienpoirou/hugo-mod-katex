@@ -12,6 +12,18 @@
 
 Standalone Hugo module for KaTeX rendering with vendored runtime assets and shortcode helpers for block and inline formulas.
 
+## When to use this module
+
+Recent Hugo versions render math **server-side** with the built-in
+`transform.ToMath` function and passthrough render hooks — no client-side
+JavaScript, no font payload. Prefer that native path for plain math on modern
+Hugo. Reach for this module when you need one of:
+
+- **Offline, vendored assets** with no reliance on Hugo's math pipeline;
+- **`mhchem`** chemistry notation ready out of the box;
+- a **shortcode-based** authoring flow with `src`/`b64` inputs;
+- support for **older Hugo** versions without server-side math.
+
 ## Features
 
 - Render block formulas with `{{< katex >}}` or `{{< katex expr="..." />}}`
@@ -55,6 +67,21 @@ File source:
 {{< katex src="renderers/katex.txt" />}}
 {{< katex-inline src="renderers/katex-inline.txt" />}}
 ```
+
+## Security: the `trust` parameter
+
+Rendering runs with KaTeX `trust` **disabled by default**. With trust off,
+commands such as `\href` do not produce links, which prevents formula source
+from injecting `javascript:` URLs or raw HTML (an XSS vector).
+
+Enable it per shortcode only for content you fully control:
+
+```text
+{{< katex expr="\href{https://example.org}{link}" trust="true" />}}
+```
+
+Do **not** set `trust="true"` on formulas that come from untrusted or
+user-submitted sources.
 
 ## Output assets
 
