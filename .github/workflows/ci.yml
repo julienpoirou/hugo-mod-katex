@@ -139,3 +139,31 @@ jobs:
             echo "expected the build to fail on an empty shortcode source" >&2
             exit 1
           fi
+          rm "${SITE_DIR}/content/invalid.md"
+
+          # Dedicated page for the headless-browser trust/security check:
+          # default (trust=false) must not render a clickable href; the
+          # explicit trust=true opt-in must.
+          cat > "${SITE_DIR}/content/security-test.md" <<'EOF'
+          ---
+          title: "KaTeX trust test"
+          ---
+
+          Untrusted: {{< katex expr="\href{https://evil.example/x}{click}" />}}
+
+          Trusted: {{< katex expr="\href{https://evil.example/x}{click}" trust="true" />}}
+          EOF
+          hugo --source "${SITE_DIR}" --destination "${OUT_DIR}"
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Install test dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify real rendering in a headless browser
+        run: node tests/verify-render.js "${RUNNER_TEMP}/public"
