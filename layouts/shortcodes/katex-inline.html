@@ -1,9 +1,9 @@
 {{- if not (.Page.Scratch.Get "hugoModKatexLoaded") -}}
   <link rel="stylesheet" href="{{ "vendor/hugo-mod-katex/katex.min.css" | relURL }}">
-  <script src="{{ "vendor/hugo-mod-katex/katex.min.js" | relURL }}"></script>
-  <script src="{{ "vendor/hugo-mod-katex/mhchem.min.js" | relURL }}"></script>
+  <script defer src="{{ "vendor/hugo-mod-katex/katex.min.js" | relURL }}"></script>
+  <script defer src="{{ "vendor/hugo-mod-katex/mhchem.min.js" | relURL }}"></script>
   <link rel="stylesheet" href="{{ "vendor/hugo-mod-katex/hugo-mod-katex.css" | relURL }}">
-  <script src="{{ "vendor/hugo-mod-katex/hugo-mod-katex.js" | relURL }}"></script>
+  <script defer src="{{ "vendor/hugo-mod-katex/hugo-mod-katex.js" | relURL }}"></script>
   {{- .Page.Scratch.Set "hugoModKatexLoaded" true -}}
 {{- end -}}
 {{- $source := or .Inner "" -}}
