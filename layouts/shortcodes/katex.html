@@ -26,6 +26,6 @@
   {{- end -}}
   {{- $encodedSource = $source | base64Encode -}}
 {{- end -}}
-<div class="hugo-mod-katex" data-hugo-mod-katex data-display="true" data-source="{{ $encodedSource }}">
+<div class="hugo-mod-katex" data-hugo-mod-katex data-display="true" data-trust="{{ eq (printf "%v" (or (.Get "trust") "false")) "true" }}" data-source="{{ $encodedSource }}">
   <div class="hugo-mod-katex__output" data-katex-output></div>
 </div>

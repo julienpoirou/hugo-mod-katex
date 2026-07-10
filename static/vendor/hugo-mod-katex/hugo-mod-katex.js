@@ -32,7 +32,11 @@
       output.innerHTML = window.katex.renderToString(source, {
         displayMode: element.dataset.display === "true",
         throwOnError: false,
-        trust: true
+        // trust is off by default: with it on, commands like \href can emit
+        // javascript: URLs and raw HTML, turning formula source into an XSS
+        // vector. Opt in per shortcode with trust="true" only for content
+        // you fully control.
+        trust: element.dataset.trust === "true"
       });
       output.classList.remove("is-error");
       element.dataset.rendered = "true";
