@@ -79,7 +79,7 @@ jobs:
 
           Block src: {{< katex src="renderers/formula.txt" />}}
 
-          Block b64: {{< katex b64="\${B64_SOURCE}" />}}
+          Block b64: {{< katex b64="${B64_SOURCE}" />}}
 
           Block inline-body:
           {{< katex >}}
@@ -105,6 +105,13 @@ jobs:
           # trust is off by default and only true where explicitly opted in.
           test "$(grep -c 'data-trust="false"' "${PAGE}")" -eq 5
           test "$(grep -c 'data-trust="true"' "${PAGE}")" -eq 1
+
+          # The b64 shortcode (4th wrapper, in document order) actually
+          # decodes the source: a shell variable inside an unquoted heredoc
+          # must expand, not be passed through literally.
+          grep -o 'data-source="[^"]*"' "${PAGE}" | sed -n '4p' \
+            | sed 's/data-source="//;s/"$//;s/&#43;/+/g' | base64 -d \
+            | grep -q '^a\^2 + b\^2 = c\^2$'
 
           # An empty source must fail the build explicitly.
           cat > "${SITE_DIR}/content/invalid.md" <<'EOF'
