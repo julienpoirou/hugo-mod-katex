@@ -6,9 +6,9 @@
   <script src="{{ "vendor/hugo-mod-katex/hugo-mod-katex.js" | relURL }}"></script>
   {{- .Page.Scratch.Set "hugoModKatexLoaded" true -}}
 {{- end -}}
-{{- $source := .Inner -}}
-{{- $src := .Get "src" -}}
-{{- $expr := .Get "expr" -}}
+{{- $source := or .Inner "" -}}
+{{- $src := or (.Get "src") "" -}}
+{{- $expr := or (.Get "expr") "" -}}
 {{- $encodedSource := "" -}}
 {{- with .Get "b64" -}}
   {{- $encodedSource = . -}}
