@@ -1,9 +1,24 @@
 {{- if not (.Page.Scratch.Get "hugoModKatexLoaded") -}}
-  <link rel="stylesheet" href="{{ "vendor/hugo-mod-katex/katex.min.css" | relURL }}">
-  <script defer src="{{ "vendor/hugo-mod-katex/katex.min.js" | relURL }}"></script>
-  <script defer src="{{ "vendor/hugo-mod-katex/mhchem.min.js" | relURL }}"></script>
-  <link rel="stylesheet" href="{{ "vendor/hugo-mod-katex/hugo-mod-katex.css" | relURL }}">
-  <script defer src="{{ "vendor/hugo-mod-katex/hugo-mod-katex.js" | relURL }}"></script>
+  {{- $style := resources.Get "vendor/hugo-mod-katex/katex.min.css" | fingerprint "sha256" -}}
+  {{- $lib := resources.Get "vendor/hugo-mod-katex/katex.min.js" | fingerprint "sha256" -}}
+  {{- $mhchem := resources.Get "vendor/hugo-mod-katex/mhchem.min.js" | fingerprint "sha256" -}}
+  {{- $glueStyle := resources.Get "vendor/hugo-mod-katex/hugo-mod-katex.css" | fingerprint "sha256" -}}
+  {{- $glue := resources.Get "vendor/hugo-mod-katex/hugo-mod-katex.js" | fingerprint "sha256" -}}
+  {{/* katex.min.css references its font files via relative url(fonts/...);
+       fingerprinting it only renames the stylesheet itself, so that
+       relationship still resolves as long as the fonts are published
+       alongside it under the same, unfingerprinted names. Fonts are never
+       referenced directly by a template, so Hugo won't publish them unless
+       something forces each resource's permalink to be read - this range
+       does that without emitting anything. */}}
+  {{- range resources.Match "vendor/hugo-mod-katex/fonts/*" -}}
+    {{- .RelPermalink -}}
+  {{- end -}}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+  <script defer src="{{ $lib.RelPermalink }}" integrity="{{ $lib.Data.Integrity }}"></script>
+  <script defer src="{{ $mhchem.RelPermalink }}" integrity="{{ $mhchem.Data.Integrity }}"></script>
+  <link rel="stylesheet" href="{{ $glueStyle.RelPermalink }}" integrity="{{ $glueStyle.Data.Integrity }}">
+  <script defer src="{{ $glue.RelPermalink }}" integrity="{{ $glue.Data.Integrity }}"></script>
   {{- .Page.Scratch.Set "hugoModKatexLoaded" true -}}
 {{- end -}}
 {{- $source := or .Inner "" -}}
