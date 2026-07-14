@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.3...v0.2.4) (2026-07-14)
+
+
+### Corrections 🐛
+
+* **shortcodes:** Stop leaking font resource URLs into rendered pages ([9ba8c69](https://github.com/julienpoirou/hugo-mod-katex/commit/9ba8c69f448db09d73db82f0197aebf49f2c68a7))
+
 ## [0.2.3](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.2...v0.2.3) (2026-07-14)
 
 
