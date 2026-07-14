@@ -1,14 +1,14 @@
 {{- if not (.Page.Scratch.Get "hugoModKatexLoaded") -}}
-  {{- $style := resources.Get "vendor/hugo-mod-katex/katex.min.css" | fingerprint "sha256" -}}
-  {{- $lib := resources.Get "vendor/hugo-mod-katex/katex.min.js" | fingerprint "sha256" -}}
-  {{- $mhchem := resources.Get "vendor/hugo-mod-katex/mhchem.min.js" | fingerprint "sha256" -}}
-  {{- $glueStyle := resources.Get "vendor/hugo-mod-katex/hugo-mod-katex.css" | fingerprint "sha256" -}}
-  {{- $glue := resources.Get "vendor/hugo-mod-katex/hugo-mod-katex.js" | fingerprint "sha256" -}}
+  {{- $style := resources.Get "libs/hugo-mod-katex/katex.min.css" | fingerprint "sha256" -}}
+  {{- $lib := resources.Get "libs/hugo-mod-katex/katex.min.js" | fingerprint "sha256" -}}
+  {{- $mhchem := resources.Get "libs/hugo-mod-katex/mhchem.min.js" | fingerprint "sha256" -}}
+  {{- $glueStyle := resources.Get "libs/hugo-mod-katex/hugo-mod-katex.css" | fingerprint "sha256" -}}
+  {{- $glue := resources.Get "libs/hugo-mod-katex/hugo-mod-katex.js" | fingerprint "sha256" -}}
   {{/* See layouts/shortcodes/katex.html for why the fonts are touched here
        without being emitted: katex.min.css's relative url(fonts/...)
        references still resolve once the fonts are published alongside it
        under their original, unfingerprinted names. */}}
-  {{- range resources.Match "vendor/hugo-mod-katex/fonts/*" -}}
+  {{- range resources.Match "libs/hugo-mod-katex/fonts/*" -}}
     {{- .RelPermalink -}}
   {{- end -}}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">

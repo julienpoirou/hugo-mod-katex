@@ -89,16 +89,16 @@ The module publishes, through Hugo Pipes (`resources.Get` + `fingerprint`),
 so each file's published URL includes a content hash for cache-busting and
 ships a Subresource Integrity attribute:
 
-- `vendor/hugo-mod-katex/katex.min.<hash>.css`
-- `vendor/hugo-mod-katex/katex.min.<hash>.js`
-- `vendor/hugo-mod-katex/mhchem.min.<hash>.js`
-- `vendor/hugo-mod-katex/hugo-mod-katex.<hash>.js`
-- `vendor/hugo-mod-katex/hugo-mod-katex.<hash>.css`
-- `vendor/hugo-mod-katex/fonts/*` (published at their original,
+- `libs/hugo-mod-katex/katex.min.<hash>.css`
+- `libs/hugo-mod-katex/katex.min.<hash>.js`
+- `libs/hugo-mod-katex/mhchem.min.<hash>.js`
+- `libs/hugo-mod-katex/hugo-mod-katex.<hash>.js`
+- `libs/hugo-mod-katex/hugo-mod-katex.<hash>.css`
+- `libs/hugo-mod-katex/fonts/*` (published at their original,
   unfingerprinted names — `katex.min.css` references them via relative
   `url(fonts/...)`)
 
-Source files live under `assets/vendor/hugo-mod-katex/` in this
+Source files live under `assets/libs/hugo-mod-katex/` in this
 repository; see [`VENDORED.md`](VENDORED.md) for their checksums.
 
 ## Development

@@ -94,8 +94,8 @@ jobs:
 
           # Assets are fingerprinted (cache-busting) and injected only once
           # for the whole page.
-          grep -oE 'vendor/hugo-mod-katex/hugo-mod-katex\.[0-9a-f]+\.js' "${PAGE}"
-          test "$(grep -oE 'vendor/hugo-mod-katex/hugo-mod-katex\.[0-9a-f]+\.js' "${PAGE}" | wc -l)" -eq 1
+          grep -oE 'libs/hugo-mod-katex/hugo-mod-katex\.[0-9a-f]+\.js' "${PAGE}"
+          test "$(grep -oE 'libs/hugo-mod-katex/hugo-mod-katex\.[0-9a-f]+\.js' "${PAGE}" | wc -l)" -eq 1
 
           # Every injected asset ships a matching Subresource Integrity hash
           # (katex.css, katex.js, mhchem.js, glue css, glue js = 5 assets).
@@ -103,10 +103,10 @@ jobs:
 
           # Fonts referenced by katex.min.css (relative url(fonts/...)) are
           # actually published, at their original unfingerprinted names.
-          test -f "${OUT_DIR}/vendor/hugo-mod-katex/fonts/KaTeX_Main-Regular.woff2"
+          test -f "${OUT_DIR}/libs/hugo-mod-katex/fonts/KaTeX_Main-Regular.woff2"
 
           # The fingerprinted js is actually published at that path.
-          JS_PATH=$(grep -oE 'vendor/hugo-mod-katex/hugo-mod-katex\.[0-9a-f]+\.js' "${PAGE}" | head -1)
+          JS_PATH=$(grep -oE 'libs/hugo-mod-katex/hugo-mod-katex\.[0-9a-f]+\.js' "${PAGE}" | head -1)
           test -f "${OUT_DIR}/${JS_PATH}"
 
           # Six shortcodes (5 block + 1 inline) each produce a wrapper.

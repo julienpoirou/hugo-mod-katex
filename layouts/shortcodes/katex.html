@@ -1,9 +1,9 @@
 {{- if not (.Page.Scratch.Get "hugoModKatexLoaded") -}}
-  {{- $style := resources.Get "vendor/hugo-mod-katex/katex.min.css" | fingerprint "sha256" -}}
-  {{- $lib := resources.Get "vendor/hugo-mod-katex/katex.min.js" | fingerprint "sha256" -}}
-  {{- $mhchem := resources.Get "vendor/hugo-mod-katex/mhchem.min.js" | fingerprint "sha256" -}}
-  {{- $glueStyle := resources.Get "vendor/hugo-mod-katex/hugo-mod-katex.css" | fingerprint "sha256" -}}
-  {{- $glue := resources.Get "vendor/hugo-mod-katex/hugo-mod-katex.js" | fingerprint "sha256" -}}
+  {{- $style := resources.Get "libs/hugo-mod-katex/katex.min.css" | fingerprint "sha256" -}}
+  {{- $lib := resources.Get "libs/hugo-mod-katex/katex.min.js" | fingerprint "sha256" -}}
+  {{- $mhchem := resources.Get "libs/hugo-mod-katex/mhchem.min.js" | fingerprint "sha256" -}}
+  {{- $glueStyle := resources.Get "libs/hugo-mod-katex/hugo-mod-katex.css" | fingerprint "sha256" -}}
+  {{- $glue := resources.Get "libs/hugo-mod-katex/hugo-mod-katex.js" | fingerprint "sha256" -}}
   {{/* katex.min.css references its font files via relative url(fonts/...);
        fingerprinting it only renames the stylesheet itself, so that
        relationship still resolves as long as the fonts are published
@@ -11,7 +11,7 @@
        referenced directly by a template, so Hugo won't publish them unless
        something forces each resource's permalink to be read - this range
        does that without emitting anything. */}}
-  {{- range resources.Match "vendor/hugo-mod-katex/fonts/*" -}}
+  {{- range resources.Match "libs/hugo-mod-katex/fonts/*" -}}
     {{- .RelPermalink -}}
   {{- end -}}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
