@@ -12,7 +12,7 @@
        something forces each resource's permalink to be read - this range
        does that without emitting anything. */}}
   {{- range resources.Match "libs/hugo-mod-katex/fonts/*" -}}
-    {{- .RelPermalink -}}
+    {{- $noop := .RelPermalink -}}
   {{- end -}}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
   <script defer src="{{ $lib.RelPermalink }}" integrity="{{ $lib.Data.Integrity }}"></script>

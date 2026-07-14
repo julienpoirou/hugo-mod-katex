@@ -9,7 +9,7 @@
        references still resolve once the fonts are published alongside it
        under their original, unfingerprinted names. */}}
   {{- range resources.Match "libs/hugo-mod-katex/fonts/*" -}}
-    {{- .RelPermalink -}}
+    {{- $noop := .RelPermalink -}}
   {{- end -}}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
   <script defer src="{{ $lib.RelPermalink }}" integrity="{{ $lib.Data.Integrity }}"></script>
