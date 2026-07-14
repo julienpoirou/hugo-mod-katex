@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.2...v0.2.3) (2026-07-14)
+
+
+### Corrections 🐛
+
+* **tests:** Contain served paths within rootDir in serve.js ([5b05905](https://github.com/julienpoirou/hugo-mod-katex/commit/5b05905cac9de8da6680661367f6eb6a303e4c4e))
+
 ## [0.2.2](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.1...v0.2.2) (2026-07-14)
 
 
