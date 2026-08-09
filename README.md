@@ -2,117 +2,127 @@
 
 [![CI](https://github.com/julienpoirou/hugo-mod-katex/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/julienpoirou/hugo-mod-katex/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/julienpoirou/hugo-mod-katex/actions/workflows/codeql.yml/badge.svg)](https://github.com/julienpoirou/hugo-mod-katex/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/julienpoirou/hugo-mod-katex/badge)](https://scorecard.dev/viewer/?uri=github.com/julienpoirou/hugo-mod-katex)
 [![Release](https://img.shields.io/github/v/release/julienpoirou/hugo-mod-katex?include_prereleases&sort=semver)](https://github.com/julienpoirou/hugo-mod-katex/releases)
 [![Hugo Module](https://img.shields.io/badge/Hugo-Module-FF4088?logo=hugo&logoColor=white)](https://gohugo.io/hugo-modules/)
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196.svg)](https://www.conventionalcommits.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 <p align="center">
   <img src="./logo.svg" alt="hugo-mod-katex logo" width="160" height="160">
 </p>
 
-Standalone Hugo module for KaTeX rendering with vendored runtime assets and shortcode helpers for block and inline formulas.
+<p align="center">
+  <strong>KaTeX formulas in your Hugo pages.</strong><br>
+  Block and inline shortcodes, vendored fonts, <code>mhchem</code> ready out of the box.
+</p>
 
-## When to use this module
+> **Do you need this?** Recent Hugo versions render math server-side with `transform.ToMath` and passthrough render hooks, with no JavaScript and no font payload. Prefer that for plain math. Reach for this module when you want vendored offline assets, `mhchem` chemistry notation, a shortcode flow with `src`/`b64` inputs, or support for older Hugo versions.
 
-Recent Hugo versions render math **server-side** with the built-in
-`transform.ToMath` function and passthrough render hooks — no client-side
-JavaScript, no font payload. Prefer that native path for plain math on modern
-Hugo. Reach for this module when you need one of:
+## Requires
 
-- **Offline, vendored assets** with no reliance on Hugo's math pipeline;
-- **`mhchem`** chemistry notation ready out of the box;
-- a **shortcode-based** authoring flow with `src`/`b64` inputs;
-- support for **older Hugo** versions without server-side math.
+- Hugo >= `0.124`. The extended edition is not required.
 
-## Features
+## Install
 
-- Render block formulas with `{{< katex >}}` or `{{< katex expr="..." />}}`
-- Render inline formulas with `{{< katex-inline >}}` or `{{< katex-inline expr="..." />}}`
-- Support `src`, `expr`, `b64`, and inline body input modes
-- Ship vendored `KaTeX` and `mhchem` assets
-- Fail explicitly at build time when shortcode source is missing
+**Binary** - Hugo and Go installed locally:
 
-## Requirements
-
-- Hugo `>= 0.124`
-- A Hugo site with Hugo Modules enabled
-
-## Installation
-
-Import the module in your Hugo site:
+```bash
+hugo mod init example.com/my-site
+hugo mod get github.com/julienpoirou/hugo-mod-katex
+```
 
 ```toml
+# hugo.toml
 [module]
   [[module.imports]]
     path = "github.com/julienpoirou/hugo-mod-katex"
 ```
 
+**Container** - Docker installed locally:
+
+```bash
+alias hugo='docker run --rm -v "$PWD":/src -p 1313:1313 hugomods/hugo:go-git hugo'
+hugo mod init example.com/my-site
+hugo mod get github.com/julienpoirou/hugo-mod-katex
+```
+
 ## Usage
 
-Block formula:
+**Self-closing shortcode** - Formula passed as `expr`, the handiest for one-liners:
 
 ```text
-{{< katex expr="\int_0^1 x^2\,dx" />}}
+{{< katex expr="\int_0^1 x^2\,dx = \frac{1}{3}" />}}
+
+Euler's identity: {{< katex-inline expr="e^{i\pi} + 1 = 0" />}}
 ```
 
-Inline formula:
+**Shortcode** - Raw formula between the tags, which reads better for long ones:
 
 ```text
-Euler: {{< katex-inline expr="e^{i\pi} + 1 = 0" />}}
+{{< katex >}}
+\begin{aligned}
+  a &= b + c \\
+    &= d
+\end{aligned}
+{{< /katex >}}
 ```
 
-File source:
+**Self-closing shortcode** - Formula read from a file:
 
 ```text
 {{< katex src="renderers/katex.txt" />}}
 {{< katex-inline src="renderers/katex-inline.txt" />}}
 ```
 
+**Self-closing shortcode** - Formula passed as base64:
+
+```text
+{{< katex b64="XGZyYWN7MX17Mn0=" />}}
+```
+
+### Parameters
+
+`katex` (block) and `katex-inline` accept exactly the same parameters.
+
+| Param | Default | Description |
+|---|---|---|
+| inner content | - | Raw formula between the opening and closing tags |
+| `expr` | - | The formula, inline in the shortcode call |
+| `src` | - | Path, relative to `assets/`, of a file holding the formula |
+| `b64` | - | Base64-encoded formula |
+| `trust` | `false` | `true` to enable KaTeX's trust mode |
+
+> At least one source input is required. If several are given, `b64` wins over `expr`, `expr` wins over `src`, and `src` wins over the inner content, the others are ignored silently.
+
+> A missing or empty source fails the build with an explicit error rather than emitting a blank page. An invalid `b64` payload is not caught at build time: it surfaces at render time, in place of the formula.
+
+> `src` is resolved with `readFile` from the project root, so the file must live in your own site's `assets/`. A file mounted from a theme or from another module will not be found.
+
 ## Security: the `trust` parameter
 
-Rendering runs with KaTeX `trust` **disabled by default**. With trust off,
-commands such as `\href` do not produce links, which prevents formula source
-from injecting `javascript:` URLs or raw HTML (an XSS vector).
-
-Enable it per shortcode only for content you fully control:
+With trust disabled, commands such as `\href` produce no links, which keeps formula source from injecting `javascript:` URLs or raw HTML. Enable it only for content you fully control, never for user-submitted formulas:
 
 ```text
 {{< katex expr="\href{https://example.org}{link}" trust="true" />}}
 ```
 
-Do **not** set `trust="true"` on formulas that come from untrusted or
-user-submitted sources.
+`trust` is per shortcode, so a single trusted formula does not loosen anything else on the page.
 
-## Output assets
+## Rendering
 
-The module publishes, through Hugo Pipes (`resources.Get` + `fingerprint`),
-so each file's published URL includes a content hash for cache-busting and
-ships a Subresource Integrity attribute:
+The formula is typeset in the reader's browser by KaTeX. `katex` emits a block `<div>` in display mode, `katex-inline` a `<span>` that flows with the surrounding text.
 
-- `libs/hugo-mod-katex/katex.min.<hash>.css`
-- `libs/hugo-mod-katex/katex.min.<hash>.js`
-- `libs/hugo-mod-katex/mhchem.min.<hash>.js`
-- `libs/hugo-mod-katex/hugo-mod-katex.<hash>.js`
-- `libs/hugo-mod-katex/hugo-mod-katex.<hash>.css`
-- `libs/hugo-mod-katex/fonts/*` (published at their original,
-  unfingerprinted names — `katex.min.css` references them via relative
-  `url(fonts/...)`)
+- KaTeX's stylesheet and script, `mhchem` and the glue are injected once per page, at the first `katex` or `katex-inline` shortcode, in the flow of the content, not in `<head>`. Each one is fingerprinted and carries a Subresource Integrity hash.
+- The fonts are published next to the fingerprinted stylesheet under their original names, because `katex.min.css` references them through relative `url(fonts/...)`. They are not fingerprinted, and the shortcode forces their publication without emitting any tag for them.
+- `mhchem` is always loaded, so `\ce{...}` chemistry notation works with no extra setup.
+- KaTeX runs with `throwOnError: false`, so a malformed formula is shown as KaTeX's own error markup in place of the result rather than breaking the page.
+- For formulas injected after page load, call `window.HugoModKatex.renderAll(root)`.
+- Without JavaScript the shortcode leaves an empty block: there is no server-side fallback.
 
-Source files live under `assets/libs/hugo-mod-katex/` in this
-repository; see [`VENDORED.md`](VENDORED.md) for their checksums.
+## Vendored assets
 
-## Development
+KaTeX `0.16.47` (267 kB of script, 24 kB of stylesheet, plus the full font set) and its `mhchem` contrib (33 kB) ship inside the module, no CDN, no third-party request at page load. Provenance, licenses and SHA-256 are recorded in [VENDORED.md](VENDORED.md).
 
-```bash
-git clone https://github.com/julienpoirou/hugo-mod-katex
-cd hugo-mod-katex
-```
+## License
 
-The main verification is handled by GitHub Actions with a minimal Hugo site that mounts the module and builds a sample page.
-
-## Contributing
-
-- Use Conventional Commits for branch history
-- Update docs or changelog when behavior changes
-- Keep shortcode API changes documented in this README
-- See [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md) for contribution guidance
+MIT © 2025 [Julien Poirou](mailto:julienpoirou@protonmail.com)

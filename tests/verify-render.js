@@ -1,6 +1,6 @@
 // Verifies, in a real headless browser, that the shortcode's runtime
-// actually renders — not just that Hugo emitted the right HTML/script tags
-// (which is all the shell-based CI assertions can check) — and that the
+// actually renders, not just that Hugo emitted the right HTML/script tags
+// (which is all the shell-based CI assertions can check), and that the
 // trust security default actually holds at render time, not just in the
 // data-trust attribute Hugo emits.
 "use strict";
