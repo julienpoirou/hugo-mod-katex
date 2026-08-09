@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.4...v0.2.5) (2026-08-09)
+
+
+### Corrections 🐛
+
+* **security:** Uncontrolled data used in path expression ([c95ca62](https://github.com/julienpoirou/hugo-mod-katex/commit/c95ca6259fa0ed785e604a3a6fe12f3999386cda))
+
 ## [0.2.4](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.3...v0.2.4) (2026-07-14)
 
 
