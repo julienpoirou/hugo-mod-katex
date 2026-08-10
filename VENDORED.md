@@ -2,17 +2,17 @@
 
 Provenance and integrity of every third-party file shipped by this module. When updating a library: replace the file, update this table and the matching `sha256` in [.vendored/package.json](.vendored/package.json), and update [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) if the upstream license changed.
 
-All files live in `assets/libs/hugo-mod-katex/`, all from KaTeX 0.16.47.
+All files live in `assets/libs/hugo-mod-katex/`, all from KaTeX 0.18.1.
 
 | File | Library | License | SHA-256 |
 |---|---|---|---|
-| `katex.min.js` | [KaTeX](https://github.com/KaTeX/KaTeX) | MIT | `a29d2961d3146de5949d78ac7c1a9d93ae54955bad22a6db4fbe836e88e8bf48` |
-| `katex.min.css` | KaTeX | MIT | `0289a02cf451a44dd73add683a09644252363871ac11713a647b732cee8b1ee3` |
+| `katex.min.js` | [KaTeX](https://github.com/KaTeX/KaTeX) | MIT | `68b9115510b8cedb9909a10de7799c94c0707481296f755c0a8888cb8fcde216` |
+| `katex.min.css` | KaTeX | MIT | `0fb711c9c74cb1718661933948b653fbc09a627da5dde8926b4d10585370993e` |
 | `mhchem.min.js` | [mhchem](https://github.com/KaTeX/KaTeX/tree/main/contrib/mhchem) (KaTeX contrib) | MIT | `aaf20145c0b8ecd450ccf6eb0cebece2f77d8e6a02c30d291f28c1167b57b2df` |
 
-Sources: `https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.js`, `https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.css`, `https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/contrib/mhchem.min.js`.
+Sources: `https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.js`, `https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.css`, `https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/contrib/mhchem.min.js`.
 
-The 62 font files under `fonts/` come from `https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/fonts/` and belong to the same release. They are not listed individually: `katex.min.css` references them by name, so a mismatched font set surfaces as a broken glyph rather than as a supply-chain question.
+The 62 font files under `fonts/` come from `https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/fonts/` and belong to the same release. They are not listed individually: `katex.min.css` references them by name, so a mismatched font set surfaces as a broken glyph rather than as a supply-chain question.
 
 First-party files, under this repository's [LICENSE](LICENSE): `hugo-mod-katex.js`, `hugo-mod-katex.css`.
 
