@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.5...v0.3.0) (2026-08-10)
+
+
+### Features ✨
+
+* **assets:** Update katex to 0.18.1 ([eb3377c](https://github.com/julienpoirou/hugo-mod-katex/commit/eb3377c430a359a3b688faffe4802d2cb080d14f))
+
 ## [0.2.5](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.4...v0.2.5) (2026-08-09)
 
 
