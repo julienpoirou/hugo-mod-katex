@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.3.0...v0.3.1) (2026-11-01)
+
+
+### Corrections 🐛
+
+* **ci:** Remediate scorecard findings ([#34](https://github.com/julienpoirou/hugo-mod-katex/issues/34)) ([739a076](https://github.com/julienpoirou/hugo-mod-katex/commit/739a076e7413aad35508a07438cdccecd090d6ff))
+
 ## [0.3.0](https://github.com/julienpoirou/hugo-mod-katex/compare/v0.2.5...v0.3.0) (2026-08-10)
 
 
