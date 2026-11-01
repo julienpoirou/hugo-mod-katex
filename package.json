@@ -4,9 +4,13 @@
   "version": "0.0.0",
   "description": "Headless-browser render verification for CI. Not published, not a runtime dependency of the Hugo module.",
   "scripts": {
-    "verify": "node tests/verify-render.js"
+    "verify": "node tests/verify-render.js",
+    "fuzz": "node tests/fuzz-serve.js"
   },
   "devDependencies": {
+    "@commitlint/cli": "21.2.4",
+    "@commitlint/config-conventional": "21.2.4",
+    "fast-check": "4.6.0",
     "playwright": "1.64.1"
   }
 }
